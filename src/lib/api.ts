@@ -235,8 +235,11 @@ class ApiClient {
     }
 
     const url = `${API_BASE_URL}/books`;
+    const headers = this.getAuthHeaders();
+    
     const response = await fetch(url, {
       method: 'POST',
+      headers,
       body: formData,
     });
 
@@ -275,8 +278,11 @@ class ApiClient {
     }
 
     const url = `${API_BASE_URL}/books/${id}`;
+    const headers = this.getAuthHeaders();
+    
     const response = await fetch(url, {
       method: 'PUT',
+      headers,
       body: formData,
     });
 
@@ -296,7 +302,11 @@ class ApiClient {
 
   async downloadBookFile(id: string): Promise<Blob> {
     const url = `${API_BASE_URL}/books/${id}/download`;
-    const response = await fetch(url);
+    const headers = this.getAuthHeaders();
+    
+    const response = await fetch(url, {
+      headers,
+    });
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
