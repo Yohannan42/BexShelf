@@ -15,7 +15,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Book as BookIcon,
@@ -267,14 +266,14 @@ function CreateBookDialog({
               <label className="block text-sm font-medium mb-1 text-gray-700">
                 Author *
               </label>
-                              <Input
-                  name="author"
-                  value={form.author}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="Enter author name"
-                  className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
-                />
+              <Input
+                name="author"
+                value={form.author}
+                onChange={handleInputChange}
+                required
+                placeholder="Enter author name"
+                className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
+              />
             </div>
           </div>
           <div className="flex gap-4">
@@ -282,14 +281,14 @@ function CreateBookDialog({
               <label className="block text-sm font-medium mb-1 text-gray-700">
                 Genre *
               </label>
-                              <Input
-                  name="genre"
-                  value={form.genre}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="e.g., Fiction, Science, Biography"
-                  className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
-                />
+              <Input
+                name="genre"
+                value={form.genre}
+                onChange={handleInputChange}
+                required
+                placeholder="e.g., Fiction, Science, Biography"
+                className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
+              />
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium mb-1 text-gray-700">
@@ -319,42 +318,42 @@ function CreateBookDialog({
               <label className="block text-sm font-medium mb-1 text-gray-700">
                 Rating (1-5)
               </label>
-                              <Input
-                  name="rating"
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={form.rating}
-                  onChange={handleInputChange}
-                  placeholder="1-5"
-                  className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
-                />
+              <Input
+                name="rating"
+                type="number"
+                min="1"
+                max="5"
+                value={form.rating}
+                onChange={handleInputChange}
+                placeholder="1-5"
+                className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
+              />
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium mb-1 text-gray-700">
                 Current Page
               </label>
-                              <Input
-                  name="currentPage"
-                  type="number"
-                  value={form.currentPage}
-                  onChange={handleInputChange}
-                  placeholder="Current page"
-                  className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
-                />
+              <Input
+                name="currentPage"
+                type="number"
+                value={form.currentPage}
+                onChange={handleInputChange}
+                placeholder="Current page"
+                className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
+              />
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium mb-1 text-gray-700">
                 Total Pages
               </label>
-                              <Input
-                  name="totalPages"
-                  type="number"
-                  value={form.totalPages}
-                  onChange={handleInputChange}
-                  placeholder="Total pages"
-                  className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
-                />
+              <Input
+                name="totalPages"
+                type="number"
+                value={form.totalPages}
+                onChange={handleInputChange}
+                placeholder="Total pages"
+                className="border-gray-200 focus:border-amber-500 dark:border-gray-600 dark:focus:border-[#c4a574]"
+              />
             </div>
           </div>
           <div>

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api";
@@ -80,7 +79,7 @@ export default function JournalEditor() {
   const [content, setContent] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
-  const [autoSave, setAutoSave] = useState(true);
+  const [autoSave] = useState(true);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   // Fetch journal details
@@ -91,7 +90,7 @@ export default function JournalEditor() {
   });
 
   // Fetch journal content
-  const { data: journalData } = useQuery({
+  useQuery({
     queryKey: ["journal-content", journalId],
     queryFn: () => apiClient.getJournalContent(journalId!),
     enabled: !!journalId,
@@ -115,7 +114,7 @@ export default function JournalEditor() {
         description: "Your journal entry has been saved successfully.",
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         title: "Save Failed",
         description: error.message || "Failed to save journal entry.",

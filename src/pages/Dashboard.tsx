@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Book,
-  Search,
-  Settings,
-  Sun,
   Target,
   Clock,
   Quote,
@@ -23,7 +20,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -220,7 +216,8 @@ export default function Dashboard() {
             Good Evening, Bez:)
           </h1>
           <p className="text-xl text-gray-600 mb-8 dark:text-gray-400">
-            Your stories deserve a space of their own, Your thoughts, your words, your world.
+            Your stories deserve a space of their own, Your thoughts, your
+            words, your world.
           </p>
 
           <div className="flex gap-4">

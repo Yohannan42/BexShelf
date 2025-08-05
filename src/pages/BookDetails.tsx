@@ -21,7 +21,6 @@ import {
   Minimize2,
   ZoomIn,
   ZoomOut,
-  RotateCw,
 } from "lucide-react";
 
 export default function BookDetails() {

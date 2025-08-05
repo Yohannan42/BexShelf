@@ -498,7 +498,6 @@ function CalendarSection({
 }
 
 function NotesSection() {
-  const [notes, setNotes] = useState<any[]>([]);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -1203,18 +1202,7 @@ function TaskCreationModal({
     }
   };
 
-  const getStatusColor = () => {
-    switch (status) {
-      case "todo":
-        return "bg-pink-500";
-      case "doing":
-        return "bg-purple-500";
-      case "done":
-        return "bg-indigo-500";
-      default:
-        return "bg-pink-500";
-    }
-  };
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1332,8 +1320,8 @@ export default function Planning() {
     queryFn: () => apiClient.getTasksByDate(format(currentDate, "yyyy-MM-dd")),
   });
 
-  // Fetch task stats
-  const { data: taskStats } = useQuery({
+  // Fetch task stats (used in mutations)
+  useQuery({
     queryKey: ["task-stats"],
     queryFn: () => apiClient.getTaskStats(),
   });
