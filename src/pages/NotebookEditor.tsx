@@ -124,7 +124,7 @@ export default function NotebookEditor() {
 
   // Auto-save content
   useEffect(() => {
-    if (!autoSave || !content || !projectId) return;
+    if (!content || !projectId) return;
 
     const timeoutId = setTimeout(() => {
       const wordCount = content
@@ -139,7 +139,7 @@ export default function NotebookEditor() {
     }, 2000);
 
     return () => clearTimeout(timeoutId);
-  }, [content, autoSave, selectedTheme.id, projectId]);
+  }, [content, selectedTheme.id, projectId]);
 
   // Manual save function
   const handleManualSave = () => {
@@ -311,9 +311,11 @@ export default function NotebookEditor() {
         <div
           className={`rounded-lg border-2 ${selectedTheme.borderColor} ${selectedTheme.bgColor} p-8 shadow-lg`}
         >
-          <Textarea
+          <textarea
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setContent(e.target.value)
+            }
             placeholder="Start writing your story here..."
             className={`w-full h-[calc(100vh-300px)] resize-none border-0 bg-transparent text-lg leading-relaxed ${selectedTheme.textColor} placeholder:${selectedTheme.textColor} placeholder:opacity-50 focus:ring-0 focus:outline-none`}
             style={{ fontFamily: "Georgia, serif" }}

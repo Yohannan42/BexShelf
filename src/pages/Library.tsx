@@ -489,7 +489,7 @@ export default function Library() {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
       })
-      .catch((error) => {
+      .catch((_error) => {
         toast({
           title: "Error",
           description: "Failed to download book file.",

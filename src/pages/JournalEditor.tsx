@@ -124,7 +124,7 @@ export default function JournalEditor() {
 
   // Auto-save content
   useEffect(() => {
-    if (!autoSave || !content || !journalId) return;
+    if (!content || !journalId) return;
 
     const timeoutId = setTimeout(() => {
       const wordCount = content
@@ -139,7 +139,7 @@ export default function JournalEditor() {
     }, 2000);
 
     return () => clearTimeout(timeoutId);
-  }, [content, autoSave, selectedTheme.id, journalId]);
+  }, [content, selectedTheme.id, journalId]);
 
   // Manual save function
   const handleManualSave = () => {
@@ -160,7 +160,7 @@ export default function JournalEditor() {
     .split(/\s+/)
     .filter((word) => word.length > 0).length;
 
-  if (isLoading) {
+  if (!journal) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -311,9 +311,9 @@ export default function JournalEditor() {
         <div
           className={`rounded-lg border-2 ${selectedTheme.borderColor} ${selectedTheme.bgColor} p-8 shadow-lg`}
         >
-          <Textarea
+          <textarea
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
             placeholder="Write your thoughts, feelings, and experiences here..."
             className={`w-full h-[calc(100vh-300px)] resize-none border-0 bg-transparent text-lg leading-relaxed ${selectedTheme.textColor} placeholder:${selectedTheme.textColor} placeholder:opacity-50 focus:ring-0 focus:outline-none`}
             style={{ fontFamily: "Georgia, serif" }}

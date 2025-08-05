@@ -22,7 +22,8 @@ export * from "./avatar";
 export * from "./breadcrumb";
 export * from "./calendar";
 export * from "./carousel";
-export * from "./chart";
+// Chart component temporarily disabled due to TypeScript issues
+// export * from "./chart";
 export * from "./checkbox";
 export * from "./collapsible";
 export * from "./command";

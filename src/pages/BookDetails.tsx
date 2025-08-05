@@ -17,7 +17,7 @@ import {
   Eye,
   CheckCircle,
   Clock,
-
+  X,
 } from "lucide-react";
 
 export default function BookDetails() {
@@ -267,7 +267,7 @@ export default function BookDetails() {
               Download
             </Button>
             <Button onClick={handleClosePdf} variant="outline" size="sm">
-              <Minimize2 className="w-4 h-4" />
+              <X className="w-4 h-4" />
             </Button>
           </div>
         </div>

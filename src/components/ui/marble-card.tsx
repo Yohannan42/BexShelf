@@ -1,8 +1,8 @@
 import { Card } from "./card";
-import type { CardProps } from "./card";
+import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-interface MarbleCardProps extends CardProps {
+interface MarbleCardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: "light" | "dark";
 }
 
@@ -26,7 +26,7 @@ export function MarbleCard({
 }
 
 // Add a premium variant that uses a gold gradient
-export function PremiumCard({ className, ...props }: CardProps) {
+export function PremiumCard({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <Card
       className={cn(

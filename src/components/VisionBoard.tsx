@@ -10,7 +10,6 @@ import {
   RotateCcw,
   Trash2,
   X,
-  Plus,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -41,7 +40,7 @@ export default function VisionBoard({
   onClose,
 }: VisionBoardProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [selectedImage] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -124,7 +123,7 @@ export default function VisionBoard({
       await apiClient.deleteVisionImage(boardId, imageId);
       const updatedImages = images.filter((img) => img.id !== imageId);
       onImagesChange(updatedImages);
-      setSelectedImage(null);
+
       toast({
         title: "Success!",
         description: "Image deleted from vision board.",
@@ -210,7 +209,7 @@ export default function VisionBoard({
                   style={{
                     zIndex: image.zIndex,
                   }}
-                  onDragStop={(e, d) => {
+                  onDragStop={(_e, d) => {
                     handleImageUpdate(image.id, {
                       position: { x: d.x, y: d.y },
                     });
@@ -225,7 +224,6 @@ export default function VisionBoard({
                     });
                   }}
                   className=""
-                  onClick={() => setSelectedImage(image.id)}
                   onDoubleClick={() => bringToFront(image.id)}
                 >
                   <div className="w-full h-full relative group">
