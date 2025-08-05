@@ -512,11 +512,6 @@ function NotesSection() {
     queryFn: () => apiClient.getNotes(),
   });
 
-  const { data: pinnedNotes = [] } = useQuery({
-    queryKey: ["pinned-notes"],
-    queryFn: () => apiClient.getPinnedNotes(),
-  });
-
   // Create note mutation
   const createNoteMutation = useMutation({
     mutationFn: (data: {
@@ -1201,8 +1196,6 @@ function TaskCreationModal({
         return "To Do";
     }
   };
-
-
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, Music } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);

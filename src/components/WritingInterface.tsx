@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Save, Eye, EyeOff, Settings, Plus } from "lucide-react";
 
 interface ChapterProps {

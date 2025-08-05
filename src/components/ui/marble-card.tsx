@@ -1,4 +1,5 @@
-import { Card, type CardProps } from "./card";
+import { Card } from "./card";
+import type { CardProps } from "./card";
 import { cn } from "@/lib/utils";
 
 interface MarbleCardProps extends CardProps {

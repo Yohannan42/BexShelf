@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api";
 import { WritingProject } from "@shared/schema";
@@ -79,7 +78,7 @@ export default function NotebookEditor() {
   const [content, setContent] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
-  const [autoSave] = useState(true);
+
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   // Fetch project details

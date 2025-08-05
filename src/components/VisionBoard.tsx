@@ -1,7 +1,7 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef } from "react";
 import { Rnd } from "react-rnd";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api";
 import {
@@ -9,7 +9,6 @@ import {
   RotateCw,
   RotateCcw,
   Trash2,
-  Download,
   X,
   Plus,
   Image as ImageIcon,
@@ -42,7 +41,7 @@ export default function VisionBoard({
   onClose,
 }: VisionBoardProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -154,11 +153,6 @@ export default function VisionBoard({
     handleImageUpdate(imageId, { zIndex: maxZIndex + 1 });
   };
 
-  const sendToBack = (imageId: string) => {
-    const minZIndex = Math.min(...images.map((img) => img.zIndex), 0);
-    handleImageUpdate(imageId, { zIndex: minZIndex - 1 });
-  };
-
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-900 rounded-lg w-[95vw] h-[90vh] flex flex-col">
@@ -221,7 +215,7 @@ export default function VisionBoard({
                       position: { x: d.x, y: d.y },
                     });
                   }}
-                  onResizeStop={(e, direction, ref, delta, position) => {
+                  onResizeStop={(_e, _direction, ref, _delta, position) => {
                     handleImageUpdate(image.id, {
                       position: { x: position.x, y: position.y },
                       size: {

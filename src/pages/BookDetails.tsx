@@ -17,10 +17,7 @@ import {
   Eye,
   CheckCircle,
   Clock,
-  Maximize2,
-  Minimize2,
-  ZoomIn,
-  ZoomOut,
+
 } from "lucide-react";
 
 export default function BookDetails() {
@@ -97,7 +94,7 @@ export default function BookDetails() {
           description: "Your book is being downloaded.",
         });
       })
-      .catch((error) => {
+      .catch((_error) => {
         toast({
           title: "Download Failed",
           description: "Failed to download the book file.",
@@ -124,8 +121,8 @@ export default function BookDetails() {
         setPdfUrl(url);
         setShowPdfViewer(true);
       })
-      .catch((error) => {
-        console.error("Error downloading PDF:", error);
+      .catch((_error) => {
+        console.error("Error downloading PDF:", _error);
         toast({
           title: "Error",
           description: "Failed to load the PDF file.",
