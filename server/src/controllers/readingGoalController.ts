@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ReadingGoalModel } from "../models/readingGoal";
+import { ReadingGoalModel } from "../models/readingGoal.js";
 import { CreateReadingGoalRequest, UpdateReadingGoalRequest } from "../types";
 
 export class ReadingGoalController {

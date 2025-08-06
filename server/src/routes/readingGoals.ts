@@ -1,7 +1,11 @@
 import { Router } from "express";
-import { ReadingGoalController } from "../controllers/readingGoalController";
+import { ReadingGoalController } from "../controllers/readingGoalController.js";
+import { authenticateToken } from "../middleware/auth.js";
 
 const router = Router();
+
+// Reading goal routes - all require authentication
+router.use(authenticateToken);
 
 // GET /api/reading-goals - Get all reading goals
 router.get("/", ReadingGoalController.getAllReadingGoals);

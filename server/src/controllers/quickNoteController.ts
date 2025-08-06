@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { QuickNoteModel } from "../models/quickNote";
+import { QuickNoteModel } from "../models/quickNote.js";
 import { CreateQuickNoteRequest, UpdateQuickNoteRequest } from "../types";
 
 export class QuickNoteController {

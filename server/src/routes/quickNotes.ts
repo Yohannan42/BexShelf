@@ -1,7 +1,11 @@
 import { Router } from "express";
-import { QuickNoteController } from "../controllers/quickNoteController";
+import { QuickNoteController } from "../controllers/quickNoteController.js";
+import { authenticateToken } from "../middleware/auth.js";
 
 const router = Router();
+
+// Quick note routes - all require authentication
+router.use(authenticateToken);
 
 // GET /api/quick-notes - Get all quick notes
 router.get("/", QuickNoteController.getAllQuickNotes);
