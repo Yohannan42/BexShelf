@@ -38,6 +38,8 @@ app.use(cors({
     'http://localhost:4002',
     'http://localhost:4003',
     'http://localhost:5173',
+    'https://bex-shelf-8cg47kog7-yohannan-woldesemayats-proje.vercel.app',
+    'https://bex-shelf.vercel.app',
     process.env.FRONTEND_URL
   ].filter((url): url is string => Boolean(url)),
   credentials: true,
