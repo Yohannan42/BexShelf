@@ -32,17 +32,42 @@ app.use(helmet({
   },
 }));
 app.use(cors({
-  origin: [
-    'http://localhost:4000',
-    'http://localhost:4001', 
-    'http://localhost:4002',
-    'http://localhost:4003',
-    'http://localhost:5173',
-    'https://bex-shelf-8cg47kog7-yohannan-woldesemayats-proje.vercel.app',
-    'https://bex-shelf.vercel.app',
-    process.env.FRONTEND_URL
-  ].filter((url): url is string => Boolean(url)),
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:4000',
+      'http://localhost:4001', 
+      'http://localhost:4002',
+      'http://localhost:4003',
+      'http://localhost:5173',
+      'https://bex-shelf-8cg47kog7-yohannan-woldesemayats-proje.vercel.app',
+      'https://bex-shelf-i6ewud084-yohannan-woldesemayats-projects.vercel.app',
+      'https://bex-shelf.vercel.app',
+      process.env.FRONTEND_URL
+    ].filter(Boolean);
+    
+    // Check if origin is in allowed list
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Allow any Vercel preview URL
+    if (origin.match(/^https:\/\/bex-shelf-.*\.vercel\.app$/)) {
+      return callback(null, true);
+    }
+    
+    // Allow any vercel.app domain for this project
+    if (origin.includes('vercel.app') && origin.includes('bex-shelf')) {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(morgan('combined'));
 app.use(express.json());
