@@ -170,10 +170,10 @@ export class WritingProjectModel {
     return await loadNotebookContent(projectId);
   }
 
-  static async saveNotebookContent(projectId: string, data: SaveNotebookContentRequest): Promise<void> {
+  static async saveNotebookContent(projectId: string, data: SaveNotebookContentRequest, userId: string): Promise<void> {
     await saveNotebookContent(projectId, data.content, data.wordCount, data.theme);
     
     // Also update the project's word count
-    await this.updateWordCount(projectId, data.wordCount);
+    await this.updateWordCount(projectId, data.wordCount, userId);
   }
 } 

@@ -145,11 +145,13 @@ export class BookModel {
       pdfPath = await saveBookFile(file, id);
     }
 
-    const updatedBook = {
+    const updatedBook: Book = {
       ...allBooks[bookIndex],
       ...data,
       pdfPath,
       updatedAt: new Date(),
+      startDate: allBooks[bookIndex].startDate ? new Date(allBooks[bookIndex].startDate) : undefined,
+      finishDate: allBooks[bookIndex].finishDate ? new Date(allBooks[bookIndex].finishDate) : undefined,
     };
 
     // Handle status changes

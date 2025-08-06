@@ -23,7 +23,10 @@ export class VisionBoardController {
 
   static async getAllVisionBoards(req: Request, res: Response) {
     try {
-      const boards = await VisionBoardModel.getAll();
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
+      const boards = await VisionBoardModel.getAll(req.user.userId);
       res.json(boards);
     } catch (error) {
       console.error("Error fetching vision boards:", error);
@@ -33,8 +36,11 @@ export class VisionBoardController {
 
   static async getVisionBoardById(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
-      const board = await VisionBoardModel.getById(id);
+      const board = await VisionBoardModel.getById(id, req.user.userId);
       
       if (!board) {
         return res.status(404).json({ error: "Vision board not found" });
@@ -49,10 +55,14 @@ export class VisionBoardController {
 
   static async getVisionBoardByYearAndMonth(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { year, month } = req.params;
       const board = await VisionBoardModel.getByYearAndMonth(
         parseInt(year),
-        parseInt(month)
+        parseInt(month),
+        req.user.userId
       );
       
       if (!board) {
@@ -68,6 +78,9 @@ export class VisionBoardController {
 
   static async createVisionBoard(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const boardData: CreateVisionBoardRequest = req.body;
       
       // Validate required fields
@@ -77,7 +90,7 @@ export class VisionBoardController {
         });
       }
 
-      const newBoard = await VisionBoardModel.create(boardData);
+      const newBoard = await VisionBoardModel.create(boardData, req.user.userId);
       res.status(201).json(newBoard);
     } catch (error) {
       console.error("Error creating vision board:", error);
@@ -87,6 +100,9 @@ export class VisionBoardController {
 
   static async updateVisionBoard(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
       const updateData: UpdateVisionBoardRequest = req.body;
 
@@ -105,6 +121,9 @@ export class VisionBoardController {
 
   static async deleteVisionBoard(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
       const deleted = await VisionBoardModel.delete(id);
       
@@ -121,6 +140,9 @@ export class VisionBoardController {
 
   static async addImage(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { boardId } = req.params;
       
       if (!req.file) {
@@ -142,6 +164,9 @@ export class VisionBoardController {
 
   static async updateImage(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { boardId, imageId } = req.params;
       const updateData: UpdateVisionImageRequest = req.body;
 
@@ -160,6 +185,9 @@ export class VisionBoardController {
 
   static async deleteImage(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { boardId, imageId } = req.params;
       const deleted = await VisionBoardModel.deleteImage(boardId, imageId);
       
@@ -176,6 +204,9 @@ export class VisionBoardController {
 
   static async getImage(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { imageId } = req.params;
       const imagePath = await VisionBoardModel.getImagePath(imageId);
       

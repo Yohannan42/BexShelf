@@ -5,7 +5,10 @@ import { CreateReadingGoalRequest, UpdateReadingGoalRequest } from "../types";
 export class ReadingGoalController {
   static async getAllReadingGoals(req: Request, res: Response) {
     try {
-      const goals = await ReadingGoalModel.getAll();
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
+      const goals = await ReadingGoalModel.getAll(req.user.userId);
       res.json(goals);
     } catch (error) {
       console.error("Error fetching reading goals:", error);
@@ -15,8 +18,11 @@ export class ReadingGoalController {
 
   static async getReadingGoalById(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
-      const goal = await ReadingGoalModel.getById(id);
+      const goal = await ReadingGoalModel.getById(id, req.user.userId);
 
       if (!goal) {
         return res.status(404).json({ error: "Reading goal not found" });
@@ -31,7 +37,10 @@ export class ReadingGoalController {
 
   static async getActiveReadingGoal(req: Request, res: Response) {
     try {
-      const goal = await ReadingGoalModel.getActiveGoal();
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
+      const goal = await ReadingGoalModel.getActiveGoal(req.user.userId);
       res.json(goal);
     } catch (error) {
       console.error("Error fetching active reading goal:", error);
@@ -41,8 +50,11 @@ export class ReadingGoalController {
 
   static async getReadingGoalByYear(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { year } = req.params;
-      const goal = await ReadingGoalModel.getByYear(parseInt(year));
+      const goal = await ReadingGoalModel.getByYear(parseInt(year), req.user.userId);
       res.json(goal);
     } catch (error) {
       console.error("Error fetching reading goal by year:", error);
@@ -52,13 +64,16 @@ export class ReadingGoalController {
 
   static async createReadingGoal(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const data: CreateReadingGoalRequest = req.body;
 
       if (!data.targetBooks || !data.year) {
         return res.status(400).json({ error: "Target books and year are required" });
       }
 
-      const goal = await ReadingGoalModel.create(data);
+      const goal = await ReadingGoalModel.create(data, req.user.userId);
       res.status(201).json(goal);
     } catch (error: any) {
       console.error("Error creating reading goal:", error);
@@ -68,10 +83,13 @@ export class ReadingGoalController {
 
   static async updateReadingGoal(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
       const data: UpdateReadingGoalRequest = req.body;
 
-      const goal = await ReadingGoalModel.update(id, data);
+      const goal = await ReadingGoalModel.update(id, data, req.user.userId);
       res.json(goal);
     } catch (error: any) {
       console.error("Error updating reading goal:", error);
@@ -84,8 +102,11 @@ export class ReadingGoalController {
 
   static async deleteReadingGoal(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
-      await ReadingGoalModel.delete(id);
+      await ReadingGoalModel.delete(id, req.user.userId);
       res.status(204).send();
     } catch (error: any) {
       console.error("Error deleting reading goal:", error);

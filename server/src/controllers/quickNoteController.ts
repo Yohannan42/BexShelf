@@ -5,7 +5,10 @@ import { CreateQuickNoteRequest, UpdateQuickNoteRequest } from "../types";
 export class QuickNoteController {
   static async getAllQuickNotes(req: Request, res: Response) {
     try {
-      const notes = await QuickNoteModel.getAll();
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
+      const notes = await QuickNoteModel.getAll(req.user.userId);
       res.json(notes);
     } catch (error) {
       console.error("Error fetching quick notes:", error);
@@ -15,8 +18,11 @@ export class QuickNoteController {
 
   static async getQuickNoteById(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
-      const note = await QuickNoteModel.getById(id);
+      const note = await QuickNoteModel.getById(id, req.user.userId);
       
       if (!note) {
         return res.status(404).json({ error: "Quick note not found" });
@@ -31,13 +37,16 @@ export class QuickNoteController {
 
   static async createQuickNote(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const data: CreateQuickNoteRequest = req.body;
       
       if (!data.content || !data.color) {
         return res.status(400).json({ error: "Content and color are required" });
       }
 
-      const note = await QuickNoteModel.create(data);
+      const note = await QuickNoteModel.create(data, req.user.userId);
       res.status(201).json(note);
     } catch (error: any) {
       console.error("Error creating quick note:", error);
@@ -51,10 +60,13 @@ export class QuickNoteController {
 
   static async updateQuickNote(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
       const data: UpdateQuickNoteRequest = req.body;
       
-      const note = await QuickNoteModel.update(id, data);
+      const note = await QuickNoteModel.update(id, data, req.user.userId);
       res.json(note);
     } catch (error: any) {
       console.error("Error updating quick note:", error);
@@ -70,8 +82,11 @@ export class QuickNoteController {
 
   static async deleteQuickNote(req: Request, res: Response) {
     try {
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
       const { id } = req.params;
-      await QuickNoteModel.delete(id);
+      await QuickNoteModel.delete(id, req.user.userId);
       res.status(204).send();
     } catch (error: any) {
       console.error("Error deleting quick note:", error);
@@ -84,7 +99,10 @@ export class QuickNoteController {
 
   static async getQuickNotesCount(req: Request, res: Response) {
     try {
-      const count = await QuickNoteModel.getCount();
+      if (!req.user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
+      const count = await QuickNoteModel.getCount(req.user.userId);
       res.json({ count });
     } catch (error) {
       console.error("Error fetching quick notes count:", error);
