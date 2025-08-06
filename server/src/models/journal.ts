@@ -121,7 +121,7 @@ export class JournalModel {
     if (journalIndex === -1) return null;
 
     const updatedJournal = {
-      ...journals[journalIndex],
+      ...allJournals[journalIndex],
       ...data,
       updatedAt: new Date(),
     };

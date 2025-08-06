@@ -82,20 +82,22 @@ async function saveNotebookContent(projectId: string, content: string, wordCount
 }
 
 export class WritingProjectModel {
-  static async getAll(): Promise<WritingProject[]> {
-    return await loadProjects();
+  static async getAll(userId: string): Promise<WritingProject[]> {
+    const allProjects = await loadProjects();
+    return allProjects.filter(project => project.userId === userId);
   }
 
-  static async getById(id: string): Promise<WritingProject | null> {
-    const projects = await loadProjects();
-    return projects.find(project => project.id === id) || null;
+  static async getById(id: string, userId: string): Promise<WritingProject | null> {
+    const allProjects = await loadProjects();
+    return allProjects.find(project => project.id === id && project.userId === userId) || null;
   }
 
-  static async create(data: CreateWritingProjectRequest): Promise<WritingProject> {
-    const projects = await loadProjects();
+  static async create(data: CreateWritingProjectRequest, userId: string): Promise<WritingProject> {
+    const allProjects = await loadProjects();
     const now = new Date();
     const project: WritingProject = {
       id: uuidv4(),
+      userId,
       title: data.title,
       description: data.description,
       type: data.type,
@@ -107,35 +109,35 @@ export class WritingProjectModel {
       updatedAt: now,
     };
 
-    projects.push(project);
-    await saveProjects(projects);
+    allProjects.push(project);
+    await saveProjects(allProjects);
     return project;
   }
 
-  static async update(id: string, data: UpdateWritingProjectRequest): Promise<WritingProject | null> {
-    const projects = await loadProjects();
-    const projectIndex = projects.findIndex(project => project.id === id);
+  static async update(id: string, data: UpdateWritingProjectRequest, userId: string): Promise<WritingProject | null> {
+    const allProjects = await loadProjects();
+    const projectIndex = allProjects.findIndex(project => project.id === id && project.userId === userId);
     if (projectIndex === -1) return null;
 
     const updatedProject = {
-      ...projects[projectIndex],
+      ...allProjects[projectIndex],
       ...data,
-      deadline: data.deadline ? new Date(data.deadline) : projects[projectIndex].deadline,
+      deadline: data.deadline ? new Date(data.deadline) : allProjects[projectIndex].deadline,
       updatedAt: new Date(),
     };
 
-    projects[projectIndex] = updatedProject;
-    await saveProjects(projects);
+    allProjects[projectIndex] = updatedProject;
+    await saveProjects(allProjects);
     return updatedProject;
   }
 
-  static async delete(id: string): Promise<boolean> {
-    const projects = await loadProjects();
-    const projectIndex = projects.findIndex(project => project.id === id);
+  static async delete(id: string, userId: string): Promise<boolean> {
+    const allProjects = await loadProjects();
+    const projectIndex = allProjects.findIndex(project => project.id === id && project.userId === userId);
     if (projectIndex === -1) return false;
 
-    projects.splice(projectIndex, 1);
-    await saveProjects(projects);
+    allProjects.splice(projectIndex, 1);
+    await saveProjects(allProjects);
     
     // Also delete the content file
     try {
@@ -148,19 +150,19 @@ export class WritingProjectModel {
     return true;
   }
 
-  static async updateWordCount(id: string, wordCount: number): Promise<WritingProject | null> {
-    const projects = await loadProjects();
-    const projectIndex = projects.findIndex(project => project.id === id);
+  static async updateWordCount(id: string, wordCount: number, userId: string): Promise<WritingProject | null> {
+    const allProjects = await loadProjects();
+    const projectIndex = allProjects.findIndex(project => project.id === id && project.userId === userId);
     if (projectIndex === -1) return null;
 
-    projects[projectIndex] = {
-      ...projects[projectIndex],
+    allProjects[projectIndex] = {
+      ...allProjects[projectIndex],
       currentWordCount: wordCount,
       updatedAt: new Date(),
     };
 
-    await saveProjects(projects);
-    return projects[projectIndex];
+    await saveProjects(allProjects);
+    return allProjects[projectIndex];
   }
 
   // Notebook content methods

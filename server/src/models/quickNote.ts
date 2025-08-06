@@ -35,20 +35,22 @@ export class QuickNoteModel {
     await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
   }
 
-  static async getAll(): Promise<QuickNote[]> {
-    return await this.readData();
+  static async getAll(userId: string): Promise<QuickNote[]> {
+    const allNotes = await this.readData();
+    return allNotes.filter(note => note.userId === userId);
   }
 
-  static async getById(id: string): Promise<QuickNote | null> {
-    const notes = await this.readData();
-    return notes.find(note => note.id === id) || null;
+  static async getById(id: string, userId: string): Promise<QuickNote | null> {
+    const allNotes = await this.readData();
+    return allNotes.find(note => note.id === id && note.userId === userId) || null;
   }
 
-  static async create(data: CreateQuickNoteRequest): Promise<QuickNote> {
-    const notes = await this.readData();
+  static async create(data: CreateQuickNoteRequest, userId: string): Promise<QuickNote> {
+    const allNotes = await this.readData();
     
-    // Check if we already have 8 notes
-    if (notes.length >= 8) {
+    // Check if we already have 8 notes for this user
+    const userNotes = allNotes.filter(note => note.userId === userId);
+    if (userNotes.length >= 8) {
       throw new Error("Maximum of 8 quick notes allowed");
     }
 
@@ -61,20 +63,21 @@ export class QuickNoteModel {
     const now = new Date().toISOString();
     const newNote: QuickNote = {
       id: uuidv4(),
+      userId,
       content: data.content.trim(),
       color: data.color,
       createdAt: now,
       updatedAt: now,
     };
 
-    notes.push(newNote);
-    await this.writeData(notes);
+    allNotes.push(newNote);
+    await this.writeData(allNotes);
     return newNote;
   }
 
-  static async update(id: string, data: UpdateQuickNoteRequest): Promise<QuickNote> {
-    const notes = await this.readData();
-    const noteIndex = notes.findIndex(note => note.id === id);
+  static async update(id: string, data: UpdateQuickNoteRequest, userId: string): Promise<QuickNote> {
+    const allNotes = await this.readData();
+    const noteIndex = allNotes.findIndex(note => note.id === id && note.userId === userId);
     
     if (noteIndex === -1) {
       throw new Error("Quick note not found");
@@ -89,31 +92,31 @@ export class QuickNoteModel {
     }
 
     const updatedNote: QuickNote = {
-      ...notes[noteIndex],
+      ...allNotes[noteIndex],
       ...data,
-      content: data.content ? data.content.trim() : notes[noteIndex].content,
+      content: data.content ? data.content.trim() : allNotes[noteIndex].content,
       updatedAt: new Date().toISOString(),
     };
 
-    notes[noteIndex] = updatedNote;
-    await this.writeData(notes);
+    allNotes[noteIndex] = updatedNote;
+    await this.writeData(allNotes);
     return updatedNote;
   }
 
-  static async delete(id: string): Promise<void> {
-    const notes = await this.readData();
-    const noteIndex = notes.findIndex(note => note.id === id);
+  static async delete(id: string, userId: string): Promise<void> {
+    const allNotes = await this.readData();
+    const noteIndex = allNotes.findIndex(note => note.id === id && note.userId === userId);
     
     if (noteIndex === -1) {
       throw new Error("Quick note not found");
     }
 
-    notes.splice(noteIndex, 1);
-    await this.writeData(notes);
+    allNotes.splice(noteIndex, 1);
+    await this.writeData(allNotes);
   }
 
-  static async getCount(): Promise<number> {
-    const notes = await this.readData();
-    return notes.length;
+  static async getCount(userId: string): Promise<number> {
+    const allNotes = await this.readData();
+    return allNotes.filter(note => note.userId === userId).length;
   }
 } 

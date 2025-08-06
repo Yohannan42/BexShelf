@@ -35,31 +35,35 @@ export class ReadingGoalModel {
     await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
   }
 
-  static async getAll(): Promise<ReadingGoal[]> {
-    return await this.readData();
+  static async getAll(userId: string): Promise<ReadingGoal[]> {
+    const allGoals = await this.readData();
+    return allGoals.filter(goal => goal.userId === userId);
   }
 
-  static async getById(id: string): Promise<ReadingGoal | null> {
-    const goals = await this.readData();
-    return goals.find(goal => goal.id === id) || null;
+  static async getById(id: string, userId: string): Promise<ReadingGoal | null> {
+    const allGoals = await this.readData();
+    return allGoals.find(goal => goal.id === id && goal.userId === userId) || null;
   }
 
-  static async getActiveGoal(): Promise<ReadingGoal | null> {
-    const goals = await this.readData();
+  static async getActiveGoal(userId: string): Promise<ReadingGoal | null> {
+    const allGoals = await this.readData();
+    const userGoals = allGoals.filter(goal => goal.userId === userId);
     const currentYear = new Date().getFullYear();
-    return goals.find(goal => goal.year === currentYear && goal.isActive) || null;
+    return userGoals.find(goal => goal.year === currentYear && goal.isActive) || null;
   }
 
-  static async getByYear(year: number): Promise<ReadingGoal | null> {
-    const goals = await this.readData();
-    return goals.find(goal => goal.year === year) || null;
+  static async getByYear(year: number, userId: string): Promise<ReadingGoal | null> {
+    const allGoals = await this.readData();
+    const userGoals = allGoals.filter(goal => goal.userId === userId);
+    return userGoals.find(goal => goal.year === year) || null;
   }
 
-  static async create(data: CreateReadingGoalRequest): Promise<ReadingGoal> {
-    const goals = await this.readData();
+  static async create(data: CreateReadingGoalRequest, userId: string): Promise<ReadingGoal> {
+    const allGoals = await this.readData();
+    const userGoals = allGoals.filter(goal => goal.userId === userId);
     
-    // Deactivate any existing active goals for the same year
-    goals.forEach(goal => {
+    // Deactivate any existing active goals for the same year for this user
+    userGoals.forEach(goal => {
       if (goal.year === data.year) {
         goal.isActive = false;
       }
@@ -68,6 +72,7 @@ export class ReadingGoalModel {
     const now = new Date().toISOString();
     const newGoal: ReadingGoal = {
       id: uuidv4(),
+      userId,
       targetBooks: data.targetBooks,
       targetPages: data.targetPages,
       year: data.year,
@@ -76,48 +81,48 @@ export class ReadingGoalModel {
       updatedAt: now,
     };
 
-    goals.push(newGoal);
-    await this.writeData(goals);
+    allGoals.push(newGoal);
+    await this.writeData(allGoals);
     return newGoal;
   }
 
-  static async update(id: string, data: UpdateReadingGoalRequest): Promise<ReadingGoal> {
-    const goals = await this.readData();
-    const goalIndex = goals.findIndex(goal => goal.id === id);
+  static async update(id: string, data: UpdateReadingGoalRequest, userId: string): Promise<ReadingGoal> {
+    const allGoals = await this.readData();
+    const goalIndex = allGoals.findIndex(goal => goal.id === id && goal.userId === userId);
     
     if (goalIndex === -1) {
       throw new Error("Reading goal not found");
     }
 
     const updatedGoal: ReadingGoal = {
-      ...goals[goalIndex],
+      ...allGoals[goalIndex],
       ...data,
       updatedAt: new Date().toISOString(),
     };
 
-    // If making this goal active, deactivate others for the same year
+    // If making this goal active, deactivate others for the same year for this user
     if (data.isActive) {
-      goals.forEach(goal => {
-        if (goal.id !== id && goal.year === updatedGoal.year) {
+      allGoals.forEach(goal => {
+        if (goal.id !== id && goal.userId === userId && goal.year === updatedGoal.year) {
           goal.isActive = false;
         }
       });
     }
 
-    goals[goalIndex] = updatedGoal;
-    await this.writeData(goals);
+    allGoals[goalIndex] = updatedGoal;
+    await this.writeData(allGoals);
     return updatedGoal;
   }
 
-  static async delete(id: string): Promise<void> {
-    const goals = await this.readData();
-    const goalIndex = goals.findIndex(goal => goal.id === id);
+  static async delete(id: string, userId: string): Promise<void> {
+    const allGoals = await this.readData();
+    const goalIndex = allGoals.findIndex(goal => goal.id === id && goal.userId === userId);
     
     if (goalIndex === -1) {
       throw new Error("Reading goal not found");
     }
 
-    goals.splice(goalIndex, 1);
-    await this.writeData(goals);
+    allGoals.splice(goalIndex, 1);
+    await this.writeData(allGoals);
   }
 } 

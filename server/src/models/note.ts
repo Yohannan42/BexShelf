@@ -29,20 +29,22 @@ export class NoteModel {
     await fs.writeFile(NOTES_FILE, JSON.stringify(notes, null, 2));
   }
 
-  static async getAll(): Promise<Note[]> {
-    return await this.readNotes();
+  static async getAll(userId: string): Promise<Note[]> {
+    const allNotes = await this.readNotes();
+    return allNotes.filter(note => note.userId === userId);
   }
 
-  static async getById(id: string): Promise<Note | null> {
-    const notes = await this.readNotes();
-    return notes.find(note => note.id === id) || null;
+  static async getById(id: string, userId: string): Promise<Note | null> {
+    const allNotes = await this.readNotes();
+    return allNotes.find(note => note.id === id && note.userId === userId) || null;
   }
 
-  static async create(data: CreateNoteRequest): Promise<Note> {
-    const notes = await this.readNotes();
+  static async create(data: CreateNoteRequest, userId: string): Promise<Note> {
+    const allNotes = await this.readNotes();
     
     const newNote: Note = {
       id: uuidv4(),
+      userId,
       title: data.title,
       content: data.content,
       isPinned: data.isPinned || false,
@@ -51,35 +53,35 @@ export class NoteModel {
       updatedAt: new Date().toISOString(),
     };
 
-    notes.push(newNote);
-    await this.writeNotes(notes);
+    allNotes.push(newNote);
+    await this.writeNotes(allNotes);
     
     return newNote;
   }
 
-  static async update(id: string, data: UpdateNoteRequest): Promise<Note | null> {
-    const notes = await this.readNotes();
-    const noteIndex = notes.findIndex(note => note.id === id);
+  static async update(id: string, data: UpdateNoteRequest, userId: string): Promise<Note | null> {
+    const allNotes = await this.readNotes();
+    const noteIndex = allNotes.findIndex(note => note.id === id && note.userId === userId);
     
     if (noteIndex === -1) {
       return null;
     }
 
-    notes[noteIndex] = {
-      ...notes[noteIndex],
+    allNotes[noteIndex] = {
+      ...allNotes[noteIndex],
       ...data,
       updatedAt: new Date().toISOString(),
     };
 
-    await this.writeNotes(notes);
-    return notes[noteIndex];
+    await this.writeNotes(allNotes);
+    return allNotes[noteIndex];
   }
 
-  static async delete(id: string): Promise<boolean> {
-    const notes = await this.readNotes();
-    const filteredNotes = notes.filter(note => note.id !== id);
+  static async delete(id: string, userId: string): Promise<boolean> {
+    const allNotes = await this.readNotes();
+    const filteredNotes = allNotes.filter(note => !(note.id === id && note.userId === userId));
     
-    if (filteredNotes.length === notes.length) {
+    if (filteredNotes.length === allNotes.length) {
       return false; // Note not found
     }
 
@@ -87,19 +89,20 @@ export class NoteModel {
     return true;
   }
 
-  static async search(query: string): Promise<Note[]> {
-    const notes = await this.readNotes();
+  static async search(query: string, userId: string): Promise<Note[]> {
+    const allNotes = await this.readNotes();
+    const userNotes = allNotes.filter(note => note.userId === userId);
     const searchTerm = query.toLowerCase();
     
-    return notes.filter(note => 
+    return userNotes.filter(note => 
       note.title.toLowerCase().includes(searchTerm) ||
       note.content.toLowerCase().includes(searchTerm) ||
       note.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
     );
   }
 
-  static async getPinned(): Promise<Note[]> {
-    const notes = await this.readNotes();
-    return notes.filter(note => note.isPinned);
+  static async getPinned(userId: string): Promise<Note[]> {
+    const allNotes = await this.readNotes();
+    return allNotes.filter(note => note.isPinned && note.userId === userId);
   }
 } 

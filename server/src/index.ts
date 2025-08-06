@@ -39,7 +39,7 @@ app.use(cors({
     'http://localhost:4003',
     'http://localhost:5173',
     process.env.FRONTEND_URL
-  ].filter(Boolean),
+  ].filter((url): url is string => Boolean(url)),
   credentials: true,
 }));
 app.use(morgan('combined'));

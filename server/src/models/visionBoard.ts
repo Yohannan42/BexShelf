@@ -38,25 +38,27 @@ export class VisionBoardModel {
     await fs.writeFile(VISION_BOARDS_FILE, JSON.stringify(boards, null, 2));
   }
 
-  static async getAll(): Promise<VisionBoard[]> {
-    return await this.readVisionBoards();
+  static async getAll(userId: string): Promise<VisionBoard[]> {
+    const allBoards = await this.readVisionBoards();
+    return allBoards.filter(board => board.userId === userId);
   }
 
-  static async getById(id: string): Promise<VisionBoard | null> {
-    const boards = await this.readVisionBoards();
-    return boards.find(board => board.id === id) || null;
+  static async getById(id: string, userId: string): Promise<VisionBoard | null> {
+    const allBoards = await this.readVisionBoards();
+    return allBoards.find(board => board.id === id && board.userId === userId) || null;
   }
 
-  static async getByYearAndMonth(year: number, month: number): Promise<VisionBoard | null> {
-    const boards = await this.readVisionBoards();
-    return boards.find(board => board.year === year && board.month === month) || null;
+  static async getByYearAndMonth(year: number, month: number, userId: string): Promise<VisionBoard | null> {
+    const allBoards = await this.readVisionBoards();
+    return allBoards.find(board => board.year === year && board.month === month && board.userId === userId) || null;
   }
 
-  static async create(data: CreateVisionBoardRequest): Promise<VisionBoard> {
-    const boards = await this.readVisionBoards();
+  static async create(data: CreateVisionBoardRequest, userId: string): Promise<VisionBoard> {
+    const allBoards = await this.readVisionBoards();
     
     const newBoard: VisionBoard = {
       id: uuidv4(),
+      userId,
       year: data.year,
       month: data.month,
       title: data.title,
@@ -66,8 +68,8 @@ export class VisionBoardModel {
       updatedAt: new Date().toISOString(),
     };
 
-    boards.push(newBoard);
-    await this.writeVisionBoards(boards);
+    allBoards.push(newBoard);
+    await this.writeVisionBoards(allBoards);
     
     return newBoard;
   }

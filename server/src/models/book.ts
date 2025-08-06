@@ -136,7 +136,7 @@ export class BookModel {
     const bookIndex = allBooks.findIndex(book => book.id === id && book.userId === userId);
     if (bookIndex === -1) return null;
 
-    let pdfPath = books[bookIndex].pdfPath;
+    let pdfPath = allBooks[bookIndex].pdfPath;
     if (file) {
       // Delete old file if exists
       if (pdfPath) {
@@ -146,7 +146,7 @@ export class BookModel {
     }
 
     const updatedBook = {
-      ...books[bookIndex],
+      ...allBooks[bookIndex],
       ...data,
       pdfPath,
       updatedAt: new Date(),
